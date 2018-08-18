@@ -27,11 +27,11 @@ module.exports.loop = function() {
     }
 
 
-    spawnScreep('harvester', 3, 2)
+    spawnScreep('harvester', 4, 2)
     spawnScreep('upgrader', 3, 2)
     spawnScreep('fixer', 1, 2)
-    // spawnScreep('builder', 1, 2)
-    spawnScreep('harvester', 1, 1)
+    spawnScreep('builder', 1, 1)
+    // spawnScreep('harvester', 1, 1)
 
 
 
