@@ -2,8 +2,11 @@ var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 var roleFixer = require('role.fixer');
+var towers = require('towers')
 
 module.exports.loop = function() {
+
+    towers.tick()
 
     function spawnScreep(screepType, screepLimit, screepLevel) {
         var bodySize
@@ -19,18 +22,20 @@ module.exports.loop = function() {
         var screepCounter = _.filter(Game.creeps, (creep) => creep.memory.role == screepType);
         
         if (screepCounter.length < screepLimit) {
-            var screepName = screepType + Game.time;
-            console.log('Spawning new ' + screepType + ': ' + screepName);
-            Game.spawns['Base01'].spawnCreep(bodySize, screepName, { memory: { role: screepType } });
+            if (screepType == 'harvester' && screepCounter.length >= screepLimit) {
+                var screepName = screepType + Game.time;
+                console.log('Spawning new ' + screepType + ': ' + screepName);
+                Game.spawns['Base01'].spawnCreep(bodySize, screepName, { memory: { role: screepType } });
+            }
         }
         console.log('Lv. ' + screepLevel  + ' ' + screepType + 's: ' + screepCounter.length +'; Limit: ' + screepLimit)
     }
 
 
-    spawnScreep('harvester', 4, 2)
+    spawnScreep('harvester', 5, 2)
+    spawnScreep('fixer', 3, 1)
     spawnScreep('upgrader', 3, 2)
-    spawnScreep('fixer', 1, 2)
-    spawnScreep('builder', 1, 1)
+    // spawnScreep('builder', 1, 1)
     // spawnScreep('harvester', 1, 1)
 
 
