@@ -5,6 +5,7 @@ var roleFixer = require('role.fixer');
 var towers = require('towers')
 
 module.exports.loop = function() {
+    var harvesterCounter = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
 
     towers.tick()
 
@@ -15,30 +16,28 @@ module.exports.loop = function() {
             case 2:
                 bodySize = [WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE];
                 break;
-
             default:
                 bodySize = [WORK, CARRY, MOVE];
         }
 
         var screepCounter = _.filter(Game.creeps, (creep) => creep.memory.role == screepType);
-
         if (screepCounter.length < screepLimit) {
-            if (screepType == 'harvester' && screepCounter.length >= screepLimit) {
-                var screepName = screepType + Game.time;
-                console.log('Spawning new ' + screepType + ': ' + screepName);
-                Game.spawns['Base01'].spawnCreep(bodySize, screepName, { memory: { role: screepType } });
-            }
+            var screepName = screepType + Game.time;
+            console.log('Spawning new ' + screepType + ': ' + screepName);
+            Game.spawns['Base01'].spawnCreep(bodySize, screepName, { memory: { role: screepType } });
         }
+
         console.log('Lv. ' + screepLevel + ' ' + screepType + 's: ' + screepCounter.length + '; Limit: ' + screepLimit)
     }
 
-
     spawnScreep('harvester', 5, 2)
-    spawnScreep('fixer', 3, 1)
-    spawnScreep('upgrader', 3, 2)
-        // spawnScreep('builder', 1, 1)
-        // spawnScreep('harvester', 1, 1)
 
+    if (harvesterCounter.length >= 3) { // Emergency Harvester spawn limit
+        spawnScreep('fixer', 2, 2)
+        spawnScreep('upgrader', 3, 2)
+        spawnScreep('builder', 1, 1)
+            // spawnScreep('harvester', 1, 1)
+    }
 
 
     if (Game.spawns['Base01'].spawning) {

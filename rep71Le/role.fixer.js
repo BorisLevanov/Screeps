@@ -18,13 +18,13 @@ var roleFixer = {
                 }
             });
             targets.sort((a, b) => a.hits - b.hits);
+
             if (targets.length > 0) {
                 if (creep.repair(targets[0]) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(targets[0]);
                     creep.say('I fix.');
                 }
             } else {
-                console.log('Nothing to fix')
                 var targets = creep.room.find(FIND_STRUCTURES, {
                     filter: (structure) => {
                         return (structure.structureType == STRUCTURE_TOWER) &&
