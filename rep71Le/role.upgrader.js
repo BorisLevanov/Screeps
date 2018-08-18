@@ -28,16 +28,16 @@ var roleUpgrader = {
                 var containers = creep.room.find(FIND_STRUCTURES, {
                     filter: (structure) => {
                         return (structure.structureType == STRUCTURE_CONTAINER) &&
-                        (_.sum(structure.store) > 0);
+                            (_.sum(structure.store) > 0);
                     }
                 });
-                
+
                 /*
                 for (var i = 0; i < containers.length; i++) {
                     console.log((i + 1) + ': ' + _.sum(containers[i].store))
                 }
                 */
-                
+
                 var sources = creep.room.find(FIND_SOURCES);
                 if (containers.length > 0) {
                     if (creep.withdraw(containers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {

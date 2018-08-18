@@ -10,17 +10,18 @@ module.exports.loop = function() {
 
     function spawnScreep(screepType, screepLimit, screepLevel) {
         var bodySize
-        
+
         switch (screepLevel) {
             case 2:
                 bodySize = [WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE];
-            break;
-                
-            default: bodySize = [WORK, CARRY, MOVE];
+                break;
+
+            default:
+                bodySize = [WORK, CARRY, MOVE];
         }
-        
+
         var screepCounter = _.filter(Game.creeps, (creep) => creep.memory.role == screepType);
-        
+
         if (screepCounter.length < screepLimit) {
             if (screepType == 'harvester' && screepCounter.length >= screepLimit) {
                 var screepName = screepType + Game.time;
@@ -28,15 +29,15 @@ module.exports.loop = function() {
                 Game.spawns['Base01'].spawnCreep(bodySize, screepName, { memory: { role: screepType } });
             }
         }
-        console.log('Lv. ' + screepLevel  + ' ' + screepType + 's: ' + screepCounter.length +'; Limit: ' + screepLimit)
+        console.log('Lv. ' + screepLevel + ' ' + screepType + 's: ' + screepCounter.length + '; Limit: ' + screepLimit)
     }
 
 
     spawnScreep('harvester', 5, 2)
     spawnScreep('fixer', 3, 1)
     spawnScreep('upgrader', 3, 2)
-    // spawnScreep('builder', 1, 1)
-    // spawnScreep('harvester', 1, 1)
+        // spawnScreep('builder', 1, 1)
+        // spawnScreep('harvester', 1, 1)
 
 
 

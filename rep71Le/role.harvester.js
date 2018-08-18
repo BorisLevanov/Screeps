@@ -3,12 +3,12 @@ var roleHarvester = {
     /** @param {Creep} creep **/
     run: function(creep) {
 
-    for(var name in Memory.creeps) {
-        if(!Game.creeps[name]) {
-            delete Memory.creeps[name];
-            console.log('Clearing non-existing creep memory:', name);
+        for (var name in Memory.creeps) {
+            if (!Game.creeps[name]) {
+                delete Memory.creeps[name];
+                console.log('Clearing non-existing creep memory:', name);
+            }
         }
-    }
 
         if (creep.room.name != 'W43N35') {
             const exitDir = creep.room.findExitTo('W43N35', ['W43N35']);
@@ -28,14 +28,14 @@ var roleHarvester = {
                             (structure.energy < structure.energyCapacity);
                     }
                 });
-                
+
                 var containers = creep.room.find(FIND_STRUCTURES, {
                     filter: (structure) => {
                         return (structure.structureType == STRUCTURE_CONTAINER) &&
-                        (_.sum(structure.store) < structure.storeCapacity);
+                            (_.sum(structure.store) < structure.storeCapacity);
                     }
                 });
-                
+
                 /*
                 console.log(targetsTwo.length)
                     for (var i = 0; i < containers.length; i++) {
@@ -46,11 +46,11 @@ var roleHarvester = {
                 if (targets.length > 0) {
                     if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
-                    } 
+                    }
                 } else {
                     if (creep.transfer(containers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(containers[0], { visualizePathStyle: { stroke: '#ffffff' } });
-                    } 
+                    }
                 }
             }
         }

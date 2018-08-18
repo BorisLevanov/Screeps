@@ -1,7 +1,7 @@
 var roleFixer = {
 
     /** @param {Creep} creep **/
-    run: function (creep) {
+    run: function(creep) {
 
         if (creep.memory.reparing && creep.carry.energy == 0) {
             creep.memory.repairing = false;
@@ -31,11 +31,11 @@ var roleFixer = {
                             (structure.energy < structure.energyCapacity);
                     }
                 });
-                
+
                 if (targets.length > 0) {
                     if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
-                    } 
+                    }
                 }
             }
         } else {
