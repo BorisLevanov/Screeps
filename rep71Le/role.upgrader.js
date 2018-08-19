@@ -31,12 +31,7 @@ var roleUpgrader = {
                             (_.sum(structure.store) > 0);
                     }
                 });
-
-                /*
-                for (var i = 0; i < containers.length; i++) {
-                    console.log((i + 1) + ': ' + _.sum(containers[i].store))
-                }
-                */
+                // containers = _.sortBy(containers, s => creep.pos.getRangeTo(s))
 
                 var sources = creep.room.find(FIND_SOURCES);
                 if (containers.length > 0) {
@@ -44,8 +39,8 @@ var roleUpgrader = {
                         creep.moveTo(containers[0])
                     }
                 } else {
-                    if (creep.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(sources[1], { visualizePathStyle: { stroke: '#ffaa00' } });
+                    if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(sources[0], { visualizePathStyle: { stroke: '#ffaa00' } });
                     }
                 }
             }

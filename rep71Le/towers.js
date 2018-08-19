@@ -7,11 +7,17 @@ var towers = {
         })
         _.forEach(towers, function(tower) {
             var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (structure) => structure.hits < structure.hitsMax
+                filter: (structure) => {
+                    return (structure.structureType == STRUCTURE_ROAD || structure.structureType == STRUCTURE_CONTAINER) &&
+                        structure.hits < (structure.hitsMax / 2)
+                    }
             });
-            if (closestDamagedStructure) {
-                // tower.say('Conserving energy')
-                // tower.repair(closestDamagedStructure);
+            // console.log(tower.energy + '/' + (tower.energyCapacity / 4))
+            //console.log(closestDamagedStructure.hits + ' / ' + closestDamagedStructure.hitsMax + ' (' + closestDamagedStructure.hitsMax / 2 + ')')
+            if (tower.energy > (tower.energyCapacity / 4)) {
+                if (closestDamagedStructure) {
+                    tower.repair(closestDamagedStructure);
+                }
             }
             var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
             if (closestHostile) {

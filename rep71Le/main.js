@@ -7,11 +7,14 @@ var towers = require('towers')
 module.exports.loop = function() {
     var harvesterCounter = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
 
-    towers.tick()
-
+    /**
+     * Spawns screeps based on requested type and level
+     * @param {*} screepType 
+     * @param {*} screepLimit 
+     * @param {*} screepLevel 
+     */
     function spawnScreep(screepType, screepLimit, screepLevel) {
         var bodySize
-
         switch (screepLevel) {
             case 2:
                 bodySize = [WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE];
@@ -19,24 +22,33 @@ module.exports.loop = function() {
             default:
                 bodySize = [WORK, CARRY, MOVE];
         }
-
         var screepCounter = _.filter(Game.creeps, (creep) => creep.memory.role == screepType);
         if (screepCounter.length < screepLimit) {
             var screepName = screepType + Game.time;
             console.log('Spawning new ' + screepType + ': ' + screepName);
             Game.spawns['Base01'].spawnCreep(bodySize, screepName, { memory: { role: screepType } });
         }
-
-        console.log('Lv. ' + screepLevel + ' ' + screepType + 's: ' + screepCounter.length + '; Limit: ' + screepLimit)
     }
 
-    spawnScreep('harvester', 5, 2)
+    // Memory cleaner
+    for (var name in Memory.creeps) {
+        if (!Game.creeps[name]) {
+            delete Memory.creeps[name];
+            console.log('Clearing non-existing creep memory:', name);
+        }
+    }
 
-    if (harvesterCounter.length >= 3) { // Emergency Harvester spawn limit
+    towers.tick()
+
+
+
+    spawnScreep('harvester', 4, 2)
+        // Emergency Harvester spawn limit
+    if (harvesterCounter.length >= 3) {
+        // The rest of spawns
         spawnScreep('fixer', 2, 2)
-        spawnScreep('upgrader', 3, 2)
-        spawnScreep('builder', 1, 1)
-            // spawnScreep('harvester', 1, 1)
+        spawnScreep('upgrader', 6, 2)
+        spawnScreep('builder', 2, 2)
     }
 
 
