@@ -4,7 +4,7 @@ var roleHarvester = {
     run: function(creep) {
         var harvesterOddEven = parseInt(creep.name.replace('harvester', '')),
             preferredContainerDeliver = 0,
-            preferredSourceGather = harvesterOddEven % 2;
+            preferredSourceGather = 1;
 
         if (creep.carry.energy < creep.carryCapacity) {
             var sources = creep.room.find(FIND_SOURCES);

@@ -2,11 +2,11 @@ var roleFixer = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
-        
-        var harvesterOddEven = parseInt(creep.name.replace('harvester', '')),
+
+        var fixerOddEven = parseInt(creep.name.replace('fixer', '')),
             preferredContainerDeliver = 0,
-            preferredSourceGather = harvesterOddEven % 2;
-            
+            preferredSourceGather = fixerOddEven % 2;
+
         if (creep.memory.repairing && creep.carry.energy == 0) {
             creep.memory.repairing = false;
         }
@@ -31,7 +31,7 @@ var roleFixer = {
             } else {
                 var structureTargets = creep.room.find(FIND_STRUCTURES, {
                     filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_ROAD/* || structure.structureType == STRUCTURE_WALL */|| structure.structureType == STRUCTURE_CONTAINER) &&
+                        return (structure.structureType == STRUCTURE_ROAD || structure.structureType == STRUCTURE_WALL || structure.structureType == STRUCTURE_CONTAINER) &&
                             structure.hits < (structure.hitsMax / 1.5)
                     }
                 });

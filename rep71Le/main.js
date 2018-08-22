@@ -1,80 +1,88 @@
-var roleHarvester = require('role.harvester');
-var roleUpgrader = require('role.upgrader');
-var roleBuilder = require('role.builder');
-var roleFixer = require('role.fixer');
-var towers = require('towers')
-
 module.exports.loop = function() {
+
+    const thisSpawn = 'Base01'
+
+    Game.spawns[thisSpawn].room.memory.yellowAlert = false
     var harvesterCounter = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
 
+    // Run towers
+    require('towers').tick()
+
     /**
-     * Spawns screeps based on requested type and level
-     * @param {*} screepType 
-     * @param {*} screepLimit 
-     * @param {*} screepLevel 
+     * Spawns screeps based on requested type and limit
+     * @param {String} screepType - type of screep, i.e. screepType
+     * @param {Integer} screepLimit - how many Screeps to spawn
+     * @param {Integer} screepLevel - body identifier
      */
     function spawnScreep(screepType, screepLimit, screepLevel) {
         var bodySize
-        switch (screepLevel) {
-            case 2:
+
+        switch (screepType + '|' + screepLevel.toString()) {
+            case 'zaslanec|1':
+                bodySize = [CLAIM, MOVE];
+                break;
+
+            case 'tanchik|1':
+                bodySize = [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, ATTACK, MOVE, ATTACK, MOVE, ATTACK, MOVE];
+                break;
+
+            case 'harvester|3':
                 bodySize = [WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE];
                 break;
+
+            case 'upgrader|3':
+            case 'fixer|3':
+            case 'builder|3':
+                bodySize = [WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE];
+                break;
+
             default:
                 bodySize = [WORK, CARRY, MOVE];
+                break;
         }
+
         var screepCounter = _.filter(Game.creeps, (creep) => creep.memory.role == screepType);
         if (screepCounter.length < screepLimit) {
             var screepName = screepType + Game.time;
             console.log('Spawning new ' + screepType + ': ' + screepName);
-            Game.spawns['Base01'].spawnCreep(bodySize, screepName, { memory: { role: screepType } });
+            Game.spawns[thisSpawn].spawnCreep(bodySize, screepName, { memory: { role: screepType } });
         }
     }
 
-    // Memory cleaner
-    for (var name in Memory.creeps) {
-        if (!Game.creeps[name]) {
-            delete Memory.creeps[name];
-            console.log('Clearing non-existing creep memory:', name);
-        }
-    }
 
-    towers.tick()
-
-
-
-    spawnScreep('harvester', 4, 2)
-        // Emergency Harvester spawn limit
+    // Spawn harvesters as priority
+    spawnScreep('harvester', 3, 3)
+        // Do not spawn anything else until 3 harvesters exist
     if (harvesterCounter.length >= 3) {
-        // The rest of spawns
-        spawnScreep('fixer', 2, 2)
-        spawnScreep('upgrader', 6, 2)
-        spawnScreep('builder', 2, 2)
+        // If there's enough harvesters, spawn other units
+        spawnScreep('fixer', 2, 3)
+        spawnScreep('upgrader', 3, 3)
+        spawnScreep('builder', 1, 3)
+            //spawnScreep('zaslanec', 1, 1)
+            //if (Game.spawns[thisSpawn].room.memory.yellowAlert == true) {
+            spawnScreep('tanchik', 1, 1)
+            //}
     }
 
 
-    if (Game.spawns['Base01'].spawning) {
-        var spawningCreep = Game.creeps[Game.spawns['Base01'].spawning.name];
-        Game.spawns['Base01'].room.visual.text(
+
+
+
+    // Creep spawner
+    if (Game.spawns[thisSpawn].spawning) {
+        var spawningCreep = Game.creeps[Game.spawns[thisSpawn].spawning.name];
+        Game.spawns[thisSpawn].room.visual.text(
             '🛠️' + spawningCreep.memory.role,
-            Game.spawns['Base01'].pos.x + 1,
-            Game.spawns['Base01'].pos.y, { align: 'left', opacity: 0.8 });
+            Game.spawns[thisSpawn].pos.x + 1,
+            Game.spawns[thisSpawn].pos.y, { align: 'left', opacity: 0.8 });
     }
 
+
+    // Creep runner
     for (var name in Game.creeps) {
-        var creep = Game.creeps[name];
-        switch (creep.memory.role) {
-            case 'harvester':
-                roleHarvester.run(creep);
-                break;
-            case 'upgrader':
-                roleUpgrader.run(creep);
-                break;
-            case 'builder':
-                roleBuilder.run(creep);
-                break;
-            case 'fixer':
-                roleFixer.run(creep);
-                break;
-        }
+        var thisCreep = Game.creeps[name],
+            creepIdentifier = require('role.' + Game.creeps[name].memory.role);
+        creepIdentifier.run(thisCreep)
     }
+
 }

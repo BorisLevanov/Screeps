@@ -27,11 +27,16 @@ var roleBuilder = {
                     creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
                 }
             } else {
-                if (creep.transfer(towers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(towers[0], { visualizePathStyle: { stroke: '#ffffff' } });
+                var storageTank = creep.room.find(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return (structure.structureType == STRUCTURE_STORAGE) &&
+                            (_.sum(structure.store) < structure.storeCapacity);
+                    }
+                });
+
+                if (creep.transfer(storageTank[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(storageTank[0], { visualizePathStyle: { stroke: '#ffffff' } });
                 }
-
-
             }
         } else {
             var sources = creep.room.find(FIND_SOURCES);
