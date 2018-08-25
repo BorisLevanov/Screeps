@@ -93,9 +93,9 @@ module.exports.loop = function() {
         switch (thisSpawn) {
             case 'Base01':
                 // Spawn harvesters as priority
-                spawnScreep('harvester', 3, 3)
+                spawnScreep('harvester', 4, 3)
                     // Do not spawn anything else until 3 harvesters exist
-                if (harvestersPerRoom.length >= 3) {
+                if (harvestersPerRoom.length >= 4) {
                     // If there's enough harvesters, spawn other units
                     spawnScreep('fixer', 2, 3)
                     spawnScreep('upgrader', 3, 3)

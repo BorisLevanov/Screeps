@@ -19,12 +19,13 @@ var roleHarvester = {
             actions.energyFromSources(creep, preferredSourceGather)
         } else {
             if (actions.energyToBase(creep).length == 0) {
-                if (actions.energyToContainer(creep, preferredContainerDeliver).length == 0 || actions.energyToContainer(creep, preferredContainerDeliver) == undefined) {
+                if (actions.energyToContainer(creep, preferredContainerDeliver).length == 0) {
                     creep.say('⏳')
                     var baseLocation = creep.room.find(FIND_STRUCTURES, {
                         filter: (structure) => { return (structure.structureType == STRUCTURE_SPAWN) }
                     })
-                    creep.moveTo(baseLocation)
+
+                    creep.moveTo(baseLocation[0])
                 }
             }
         }

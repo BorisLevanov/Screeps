@@ -47,6 +47,7 @@ var actions = {
             creep.say('📦')
             creep.moveTo(containers[preferredContainerDeliver], { visualizePathStyle: { stroke: '#ffffff' } })
         }
+
         return containers
     },
 
@@ -105,11 +106,10 @@ var actions = {
             if (creep.transfer(towers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.say('🔫')
                 creep.moveTo(towers[0], { visualizePathStyle: { stroke: '#ffffff' } });
-                creep.say('I tower.');
             }
-
-            return towers
         }
+        console.log(towers)
+        return towers
     },
 
     buildStructure: function(creep) {
