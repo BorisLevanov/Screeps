@@ -1,53 +1,40 @@
 var roleBuilder = {
 
     /** @param {Creep} creep **/
-    run: function(creep) {
+    run: function(creep, actions) {
+        var preferredSourceGather
+
+        switch (creep.memory.homeRoom) {
+            case 'Base01':
+                preferredSourceGather = 0
+                break
+
+            default:
+                preferredSourceGather = 0
+        }
 
         if (creep.memory.building && creep.carry.energy == 0) {
-            creep.memory.building = false;
-            creep.say('🔄 harvest');
+            creep.memory.building = false
+
         }
         if (!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
-            creep.memory.building = true;
-            creep.say('🚧 build');
+            creep.memory.building = true
+
         }
-
+        // actions.createRoads(creep)
+        // actions.markRoad(creep)
         if (creep.memory.building) {
-            var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
-            var towers = creep.room.find(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_TOWER) &&
-                        (structure.energy < structure.energyCapacity);
-                }
-            });
-
-
-            if (targets.length) {
-                if (creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
-                }
-            } else {
-                var storageTank = creep.room.find(FIND_STRUCTURES, {
-                    filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_STORAGE) &&
-                            (_.sum(structure.store) < structure.storeCapacity);
-                    }
-                });
-
-                if (creep.transfer(storageTank[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(storageTank[0], { visualizePathStyle: { stroke: '#ffffff' } });
-                }
+            if (actions.buildStructure(creep).length == 0) {
+                actions.energyToStorage(creep)
             }
         } else {
-            var sources = creep.room.find(FIND_SOURCES);
-            if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[0], { visualizePathStyle: { stroke: '#ffaa00' } });
+            if (actions.getDroppedResource(creep).length == 0) {
+                actions.energyFromSources(creep, preferredSourceGather)
             }
-
         }
     }
 
+}
 
-};
 
-module.exports = roleBuilder;
+module.exports = roleBuilder
