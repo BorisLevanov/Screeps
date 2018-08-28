@@ -1,4 +1,4 @@
-var roleTanchik = {
+var roleShotgun = {
     /** @param {Creep} creep **/
     run: function(creep, actions) {
         var roomName = 'W43N36'
@@ -11,7 +11,7 @@ var roleTanchik = {
             const target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS)
 
             if (target) {
-                console.log(target)
+                // console.log(target)
                     //target.sort(function(a, b) {
                     //    return a.hits - b.hits
                     //})
@@ -29,4 +29,4 @@ var roleTanchik = {
     }
 }
 
-module.exports = roleTanchik
+module.exports = roleShotgun

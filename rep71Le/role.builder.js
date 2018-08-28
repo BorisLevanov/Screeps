@@ -25,7 +25,9 @@ var roleBuilder = {
         // actions.markRoad(creep)
         if (creep.memory.building) {
             if (actions.buildStructure(creep).length == 0) {
-                actions.energyToStorage(creep)
+                if (actions.energyToStorage(creep).length == 0){
+                    actions.energyToTower(creep)
+                }
             }
         } else {
             if (actions.getDroppedResource(creep).length == 0) {

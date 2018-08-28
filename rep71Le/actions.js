@@ -1,7 +1,12 @@
 var actions = {
 
     energyFromSources: function(creep, preferredSourceGather) {
-        var sources = creep.room.find(FIND_SOURCES)
+        var sources = creep.room.find(FIND_SOURCES
+            /*, {
+                        filter: (source) => { return source.energy > 0 }
+                    }*/
+        )
+
         if (creep.harvest(sources[preferredSourceGather]) == ERR_NOT_IN_RANGE) {
             creep.moveTo(sources[preferredSourceGather], { visualizePathStyle: { stroke: '#ffaa00' } })
             creep.say('⛏️')
@@ -23,6 +28,7 @@ var actions = {
                     (_.sum(structure.store) > 0)
             }
         })
+        containers = _.sortBy(containers, s => creep.pos.getRangeTo(s))
         if (containers.length > 0) {
             if (creep.withdraw(containers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(containers[0])
@@ -33,7 +39,7 @@ var actions = {
 
 
 
-    energyToContainer: function(creep, preferredContainerDeliver) {
+    energyToContainer: function(creep) {
 
         var containers = creep.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
@@ -43,9 +49,9 @@ var actions = {
         })
 
         containers = _.sortBy(containers, s => creep.pos.getRangeTo(s))
-        if (creep.transfer(containers[preferredContainerDeliver], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        if (creep.transfer(containers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.say('📦')
-            creep.moveTo(containers[preferredContainerDeliver], { visualizePathStyle: { stroke: '#ffffff' } })
+            creep.moveTo(containers[0], { visualizePathStyle: { stroke: '#ffffff' } })
         }
 
         return containers
@@ -108,7 +114,7 @@ var actions = {
                 creep.moveTo(towers[0], { visualizePathStyle: { stroke: '#ffffff' } });
             }
         }
-        console.log(towers)
+
         return towers
     },
 
@@ -134,10 +140,11 @@ var actions = {
     repairStructure: function(creep) {
         var structureTargets = creep.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
-                return (structure.structureType == STRUCTURE_ROAD || structure.structureType == STRUCTURE_WALL || structure.structureType == STRUCTURE_CONTAINER) &&
+                return (structure.structureType != STRUCTURE_WALL) &&
                     structure.hits < (structure.hitsMax / 1.5)
             }
         })
+
         structureTargets.sort((a, b) => a.hits - b.hits)
 
         if (creep.repair(structureTargets[0]) == ERR_NOT_IN_RANGE) {
@@ -177,7 +184,7 @@ var actions = {
     },
 
 
-    createRoads: function(creep) {
+    requestHighway: function(creep) {
         var roads = creep.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return (structure.structureType == STRUCTURE_ROAD)
@@ -194,9 +201,8 @@ var actions = {
     },
 
 
-    markRoad: function(creep) {
-        const creepPosition = creep.pos.toString()
-        console.log(creepPosition)
+    memoryRoads: function(creep) {
+        const creepPosition = creep.pos.toString()        
         try {
             Memory.allRoads[creepPosition]
         } catch (e) {

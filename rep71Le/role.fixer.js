@@ -23,15 +23,17 @@ var roleFixer = {
         }
         // actions.createRoads(creep)
         if (creep.memory.repairing) {
-            console.log(actions.energyToTower(creep).length)
             if (actions.energyToTower(creep).length == 0) {
                 if (actions.repairStructure(creep).length == 0) {
                     actions.buildStructure(creep)
                 }
             }
         } else {
-            if (actions.getDroppedResource(creep).length == 0) {
-                actions.energyFromSources(creep, preferredSourceGather)
+            if (actions.getDroppedResource(creep).length == 0) {                
+                if (actions.energyFromContainer(creep).length == 0) {                    
+                    actions.energyFromSources(creep, preferredSourceGather)
+                    actions.requestHighway(creep)
+                }
             }
         }
     }

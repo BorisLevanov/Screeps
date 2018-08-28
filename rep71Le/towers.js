@@ -1,22 +1,23 @@
 var towers = {
 
     /** @param {Game} game **/
-    tick: function() {
-        towers = Game.spawns.Base01.room.find(FIND_MY_STRUCTURES, {
+    tick: function(spawnIdentifier) {
+        towers = spawnIdentifier.room.find(FIND_MY_STRUCTURES, {
             filter: { structureType: STRUCTURE_TOWER }
         })
         _.forEach(towers, function(tower) {
-            var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+            var mostDamagedStructure = tower.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_ROAD || structure.structureType == STRUCTURE_CONTAINER) &&
+                    return (structure.structureType != STRUCTURE_ROAD && structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART) &&
                         structure.hits < (structure.hitsMax / 2)
                     }
             })
-            // console.log(tower.energy + '/' + (tower.energyCapacity / 4))
-            //console.log(closestDamagedStructure.hits + ' / ' + closestDamagedStructure.hitsMax + ' (' + closestDamagedStructure.hitsMax / 2 + ')')
+            mostDamagedStructure.sort((a, b) => a.hits - b.hits)
+            // console.log(mostDamagedStructure)
+            //console.log(mostDamagedStructure.hits + ' / ' + mostDamagedStructure.hitsMax + ' (' + mostDamagedStructure.hitsMax / 2 + ')')
             if (tower.energy > (tower.energyCapacity / 4)) {
-                if (closestDamagedStructure) {
-                    tower.repair(closestDamagedStructure)
+                if (mostDamagedStructure) {
+                    tower.repair(mostDamagedStructure[0])
                 }
             }
             var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS)
