@@ -1,27 +1,26 @@
 var roleShotgun = {
     /** @param {Creep} creep **/
     run: function(creep, actions) {
-        var roomName = 'W43N36'
+        var roomName = 'W43N34'
         if (creep.room.name != roomName) {
             const exitDir = creep.room.findExitTo(roomName)
             const exit = creep.pos.findClosestByRange(exitDir)
             creep.moveTo(exit, { visualizePathStyle: { stroke: '#ffaa00' } })
         } else {
             // var enemies = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3, { filter: function (i) { return i.owner.username != 'Invader' } })
-            const target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS)
-
-            if (target) {
-                // console.log(target)
-                    //target.sort(function(a, b) {
-                    //    return a.hits - b.hits
-                    //})
-                creep.moveTo(target)
-                creep.attack(target)
-            } else {
-                var sources = creep.room.find(FIND_SOURCES)
-                if (creep.moveTo(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(creep.room.controller, { visualizePathStyle: { stroke: '#ffffff' } })
+            const targetCreeps = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS, {filter: object => Memory.whitelist.indexOf(object.owner.username)==-1})
+            var enemystructure = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES/*, {
+                filter: (structure) => {
+                    return (structure.structureType == STRUCTURE_TOWER)
                 }
+            }*/)
+            
+            if (targetCreeps) {
+                creep.moveTo(targetCreeps)
+                creep.attack(targetCreeps)
+            } else {
+                creep.moveTo(enemystructure)
+                creep.attack(enemystructure)
             }
         }
 

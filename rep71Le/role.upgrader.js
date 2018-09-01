@@ -1,7 +1,7 @@
 var roleUpgrader = {
 
     /** @param {Creep} creep **/
-    run: function(creep, actions) {
+    run: function (creep, actions) {
         var preferredSourceGather
 
         switch (creep.memory.homeRoom) {
@@ -26,9 +26,12 @@ var roleUpgrader = {
             actions.upgradeController(creep)
         } else {
 
-            if (actions.energyFromContainer(creep).length == 0) {
-                actions.energyFromSources(creep, preferredSourceGather)
-                actions.requestHighway(creep)
+
+            if (actions.getDroppedResource(creep).length == 0) {
+                if (actions.energyFromContainer(creep).length == 0) {
+                    actions.energyFromSources(creep, preferredSourceGather)
+                    //actions.requestHighway(creep)
+                }
             }
         }
     }

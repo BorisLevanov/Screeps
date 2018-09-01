@@ -17,7 +17,7 @@ var roleHarvester = {
         if (creep.carry.energy < creep.carryCapacity) {
             //if (actions.energyFromContainer(creep).length == 0) {
             actions.energyFromSources(creep, preferredSourceGather)
-            actions.requestHighway(creep)
+            //actions.requestHighway(creep)
                 //}
         } else {
             if (actions.energyToBase(creep).length == 0) {

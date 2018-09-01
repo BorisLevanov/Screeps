@@ -1,18 +1,16 @@
 var roleZaslanec = {
     /** @param {Creep} creep **/
-    run: function(creep, actions) {
-        var roomName = 'W43N36'
-        if (creep.room.name != roomName) {
-            const exitDir = creep.room.findExitTo(roomName)
-            const exit = creep.pos.findClosestByRange(exitDir)
-            creep.moveTo(exit, { visualizePathStyle: { stroke: '#ffaa00' } })
+    run: function (creep, actions) {
+        if (Game.flags.Occupy.room != creep.room) {
+            creep.moveTo(Game.flags.Occupy, {
+                visualizePathStyle: {
+                    stroke: '#ffffff'
+                }
+            })
         } else {
-            if (creep.claimController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                creep.say('range')
-                creep.moveTo(creep.room.controller)
-            } else {
-                creep.say('reserve')
-            }
+            var target = Game.flags.Occupy
+            creep.reserveController(creep.room.controller)
+            creep.moveTo(target)
         }
     }
 }

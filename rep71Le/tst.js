@@ -236,3 +236,38 @@ if (!Memory.noEnergyTimer) {
         Memory.noEnergyTimer.push(spawnMemo)
     }
 }
+
+
+
+
+
+
+// FIL
+
+if (!Memory.spawnCode) {
+    Memory.spawnCode = {}
+}
+if (!Memory.spawnCode[spawnFromGame]) {
+    Memory.spawnCode[spawnFromGame] = {}
+}
+for (var spawnFromMemory in Memory.spawnCode) {
+    if (spawnFromMemory == spawnFromGame) {
+        var spawnNumberFromMemory = JSON.stringify(spawnFromMemory).split('')[6]
+        var sources = Game.spawns[spawnFromMemory].room.find(FIND_SOURCES)
+        if (!Memory.spawnCode[spawnFromMemory].sources) {
+            Memory.spawnCode[spawnFromMemory].sources = {}
+        }
+        for (var source in sources) {
+            var sourceId = sources[source].id
+            Memory.spawnCode[spawnFromMemory].sources = {
+                [sourceId]: 3
+            }
+        }
+        if (!Memory.spawnCode[spawnFromMemory].creepCodes) {
+            Memory.spawnCode[spawnFromMemory].creepCodes = []
+        }
+        var harvestersCode = 's' + spawnNumberFromMemory + 'har' + 1 + 3*sources.length
+        console.log(harvestersCode)
+        //if (!Memory.spawnCode[spawnFromMemory].creepCodes.
+    }
+}
